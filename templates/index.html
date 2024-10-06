@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/styles.css">
+
+</head>
+
+<body>
+    <section class="vh-100" id="weather-app">
+        <div class="container">
+            <div style="border-radius: 20px;" class="header">
+                <h2 style="font-family: Acme, sans-serif; font-size: 50px;"><i class="fas fa-cloud-sun">Weather App</i></h2>
+                <div class="input">
+                    <input style="border-radius: 20px;" type="text" name="city" id="city" placeholder="Enter city">
+                    <button style="border-radius: 20px;" type="button" id="sbtn">
+                        <i class="fa-regular fa-search"></i> Search
+                    </button>
+                    <button style="border-radius: 20px;" type="button" id="locbtn">
+                        <i class="bx bx-target-lock"></i> Current location
+                    </button>
+                </div>
+            </div>
+            <div class="weather-data">
+              <div class="weather-left">
+                  <div class="card">
+                      <div class="current-weather">
+                          <div class="details current-weather-details">
+                              <p>Now</p>
+                              <h2 id="current-temp">___</h2>
+                              <p id="current-condition">___</p>
+                          </div>
+                          <div class="wicon">
+                              <img src="https://openweathermap.org/img/wn/04d.png" id="weather-icon" alt="weather icon">
+                          </div>
+                      </div>
+                      <hr>
+                      <div class="cardf">
+                          <p><i class="fa-light fa-calendar"></i> <span id="current-date">___</span></p>
+                          <p><i class="fa-light fa-location-dot"></i> <span id="current-location">___</span></p>
+                      </div>
+                  </div>
+                  <h2 style="font-size: 30px; font-weight: bold; margin-left: 360px;">Today's Highlights</h2>
+                  <div class="hour" id="hourly-forecast"></div>
+          
+                  
+                  <div class="highlights">
+                      <div class="card">
+                        <div class="air-quality">
+                          <h2>Air Quality Index</h2>
+                          <p class="air-index" id="air-quality-index">Moderate</p>
+                          <div class="air-indices">
+                              <div class="air-card">
+                                  <p>PM2.5</p>
+                                  <h2 id="pm25">___ µg/m³</h2>
+                              </div>
+                              <div class="air-card">
+                                  <p>PM10</p>
+                                  <h2 id="pm10">___ µg/m³</h2>
+                              </div>
+                              <div class="air-card">
+                                  <p>SO2</p>
+                                  <h2 id="so2">___ µg/m³</h2>
+                              </div>
+                              <div class="air-card">
+                                  <p>CO</p>
+                                  <h2 id="co">___ µg/m³</h2>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="sunrise-sunset">
+                        <h2>Sunrise & Sunset</h2>
+                        <div class="sunset-times">
+                            <div class="sun-card">
+                                <div class="icon">
+                                    <i class="fa-light fa-sunrise fs-4x"></i>
+                                </div>
+                                <div>
+                                    <p>Sunrise</p>
+                                    <h2 id="sunrise-time">___</h2>
+                                </div>
+                            </div>
+                            <div class="sun-card">
+                                <div class="icon">
+                                    <i class="fa-light fa-sunset fs-4x"></i>
+                                </div>
+                                <div>
+                                    <p>Sunset</p>
+                                    <h2 id="sunset-time">___</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                  </div>
+          
+
+<div style="width: 400;" class="parameters">
+  <!-- <h2 style="font-size: 30px; font-weight: bold; margin-left: 40px;">Parameters</h2> -->
+  <div class="parameter-boxes">
+      <div class="parameter-card">
+          <div class="card-head">
+              <p>Humidity</p>
+          </div>
+          <div class="card-item">
+              <i class="fa-light fa-droplet fa-2x"></i>
+              <h2 id="humidity">____%</h2>
+          </div>
+      </div>
+      <div class="parameter-card">
+          <div class="card-head">
+              <p>Pressure</p>
+          </div>
+          <div class="card-item">
+              <i class="fa-light fa-droplet fa-2x"></i>
+              <h2 id="pressure">____ hPa</h2>
+          </div>
+      </div>
+      <div class="parameter-card">
+          <div class="card-head">
+              <p>Visibility</p>
+          </div>
+          <div class="card-item">
+              <i class="fa-light fa-eye fa-2x"></i>
+              <h2 id="visibility">____ km</h2>
+          </div>
+      </div>
+      <div class="parameter-card">
+          <div class="card-head">
+              <p>Wind Speed</p>
+          </div>
+          <div class="card-item">
+              <i class="fa-light fa-location-arrow fa-2x"></i>
+              <h2 id="wind-speed">____ m/s</h2>
+          </div>
+      </div>
+      <div class="parameter-card">
+          <div class="card-head">
+              <p>Feels Like</p>
+          </div>
+          <div class="card-item">
+              <i class="fa-light fa-temperature-list fa-2x"></i>
+              <h2 id="feels-like">____ °C</h2>
+          </div>
+      </div>
+  </div>
+</div>
+<section>
+    <div class="container">
+        <div class="chart-container">
+            <canvas id="weatherChart" width="800" height="300"></canvas>
+        </div>
+        <div class="news-container">
+            <h2><i class='fas fa-cloud-sun'></i>Latest Weather News</h2>
+            <div id="news-articles"></div>
+            <button id="loadMore" style="display:none;">View More</button>
+            <button id="loadLess" style="display:none;">View Less</button>
+        </div>
+    </div>
+</section>
+<audio id="sunny-sound" src="static\audio\sunny.mp3" preload="auto"></audio>
+<audio id="rainy-sound" src="static\audio\rainy.mp3" preload="auto"></audio>
+<audio id="snowy-sound" src="static\audio\snowy.mp3" preload="auto"></audio>
+<audio id="cloudy-sound" src="static\audio\cloudy.mp3" preload="auto"></audio>
+<audio id="cloudy-sound" src="static\audio\thunderstrom.mp3" preload="auto"></audio>
+
+
+          </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
+    <script>
+        
+        
+        const searchButton = document.getElementById("sbtn");
+        const locationButton = document.getElementById("locbtn");
+        const cityInput = document.getElementById("city");
+        const weatherApp = document.getElementById("weather-app");
+
+        const apiKey = '2f5531105953fd80c02b75b18dbcce32';
+        const apiUrl = 'https://api.openweathermap.org/data/2.5/';
+
+        async function fetchWeatherData(cityOrLatLon) {
+            try {
+                const response = await fetch(`${apiUrl}weather?q=${cityOrLatLon}&appid=${apiKey}&units=metric`);
+                if (!response.ok) {
+                  
+                    const latLon = cityOrLatLon.split(',');
+                    if (latLon.length === 2) {
+                        const lat = latLon[0].trim();
+                        const lon = latLon[1].trim();
+                        const response = await fetch(`${apiUrl}weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`);
+                        const data = await response.json();
+                        updateCurrentWeather(data);
+                        fetchHourlyForecast(data.coord.lat, data.coord.lon);
+                        fetchAirQualityData(data.coord.lat, data.coord.lon);
+                        updateBackground(data.weather[0].main);
+                    } else {
+                        throw new Error('City not found');
+                    }
+                } else {
+                    const data = await response.json();
+                    updateCurrentWeather(data);
+                    fetchHourlyForecast(data.coord.lat, data.coord.lon);
+                    fetchAirQualityData(data.coord.lat, data.coord.lon);
+                    updateBackground(data.weather[0].main);
+                }
+            } catch (error) {
+                console.error("Error fetching weather data:", error);
+                alert("Could not retrieve weather data. Please try again.");
+            }
+        }
+
+
+        let currentCount = 3; // Number of currently displayed articles
+let articles = []; // Array to store the fetched articles
+
+//  to fetch weather news
+function fetchWeatherNews() {
+    const apiKey = '5112b1a3a5a043c0b0c7387c4bd31f74'; // Replace with your news API key
+    const url = `https://newsapi.org/v2/everything?q=weather&apiKey=${apiKey}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            articles = data.articles; 
+            displayArticles(); 
+            updateViewButtonsVisibility(); 
+        })
+        .catch(error => console.error('Error fetching news:', error));
+}
+
+function displayArticles() {
+    const newsContainer = document.getElementById('news-articles');
+    newsContainer.innerHTML = ''; 
+
+    const articlesToShow = articles.slice(0, currentCount);
+
+    articlesToShow.forEach(article => {
+        const articleElement = document.createElement('div');
+        articleElement.innerHTML = `
+            <h3>${article.title}</h3>
+            <p>${article.description}</p>
+            <a href="${article.url}" target="_blank">Read more</a>
+        `;
+        newsContainer.appendChild(articleElement);
+    });
+}
+
+
+function updateViewButtonsVisibility() {
+    const loadMoreButton = document.getElementById('loadMore');
+    const loadLessButton = document.getElementById('loadLess');
+
+    
+    loadMoreButton.style.display = currentCount < articles.length ? 'block' : 'none';
+
+    loadLessButton.style.display = currentCount > 5 ? 'block' : 'none';
+}
+
+function loadMoreArticles() {
+    currentCount += 5; 
+    displayArticles(); 
+    updateViewButtonsVisibility(); 
+}
+
+function loadLessArticles() {
+    currentCount = 5; 
+    displayArticles(); 
+    updateViewButtonsVisibility(); 
+}
+
+fetchWeatherNews();
+
+
+document.getElementById('loadMore').onclick = loadMoreArticles;
+document.getElementById('loadLess').onclick = loadLessArticles;
+
+
+
+        
+
+        async function fetchHourlyForecast(lat, lon) {
+            try {
+                const response = await fetch(`${apiUrl}forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`);
+                const data = await response.json();
+                updateHourlyForecast(data);
+            } catch (error) {
+                // console.error("Error fetching hourly forecast data:", error);
+            }
+        }
+
+        function updateCurrentWeather(data) {
+            document.getElementById("current-temp").textContent = `${data.main.temp} °C`;
+            document.getElementById("current-condition").textContent = data.weather[0].description;
+            document.getElementById("current-location").textContent = `${data.name}, ${data.sys.country}`;
+            document.getElementById("humidity").textContent = `${data.main.humidity}%`;
+            document.getElementById("pressure").textContent = `${data.main.pressure} hPa`;
+            document.getElementById("visibility").textContent = `${(data.visibility / 1000).toFixed(1)} km`;
+            document.getElementById("wind-speed").textContent = `${data.wind.speed} m/s`;
+            document.getElementById("feels-like").textContent = `${data.main.feels_like} °C`;
+            document.getElementById("pm25").textContent = "N/A"; 
+            document.getElementById("pm10").textContent = "N/A"; 
+            document.getElementById("so2").textContent = "N/A"; 
+            document.getElementById("co").textContent = "N/A"; 
+
+
+            const sunriseDate = new Date(data.sys.sunrise * 1000);
+            const sunsetDate = new Date(data.sys.sunset * 1000);
+            document.getElementById("sunrise-time").textContent = sunriseDate.toLocaleTimeString();
+            document.getElementById("sunset-time").textContent = sunsetDate.toLocaleTimeString();
+            const currentDate = moment().format("MMMM Do YYYY, h:mm:ss a");
+            document.getElementById("current-date").textContent = currentDate;
+            document.getElementById("weather-icon").src = `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+        }
+
+        async function fetchAirQualityData(lat, lon) {
+            try {
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`);
+                const data = await response.json();
+                updateAirQuality(data);
+            } catch (error) {
+                console.error("Error fetching air quality data:", error);
+            }
+        }
+
+        function updateAirQuality(data) {
+            const airQualityIndex = data.list[0].main.aqi;
+            document.getElementById("air-quality-index").textContent = getAirQualityDescription(airQualityIndex);
+            document.getElementById("pm25").textContent = `${data.list[0].components.pm2_5} µg/m³`;
+            document.getElementById("pm10").textContent = `${data.list[0].components.pm10} µg/m³`;
+            document.getElementById("so2").textContent = `${data.list[0].components.so2} µg/m³`;
+            document.getElementById("co").textContent = `${data.list[0].components.co} µg/m³`;
+        }
+
+        function getAirQualityDescription(aqi) {
+            switch (aqi) {
+                case 1: return "Good";
+                case 2: return "Moderate";
+                case 3: return "Unhealthy for Sensitive Groups";
+                case 4: return "Unhealthy";
+                case 5: return "Very Unhealthy";
+                default: return "Unknown";
+            }
+        }
+
+        function updateHourlyForecast(data) {
+            const hourlyContainer = document.getElementById("hourly-forecast");
+            hourlyContainer.innerHTML = ""; 
+            data.list.slice(0, 5).forEach((hour) => {
+                const date = new Date(hour.dt * 1000);
+                const temp = hour.main.temp;
+                const icon = hour.weather[0].icon;
+                const hourCard = document.createElement("div");
+                hourCard.className = "hour-card";
+                hourCard.innerHTML = `
+                    <p>${date.getHours()}:00</p>
+                    <h2>${temp} °C</h2>
+                    <img src="https://openweathermap.org/img/wn/${icon}.png" alt="weather icon">
+                `;
+                hourlyContainer.appendChild(hourCard);
+            });
+        }
+        
+
+        function updateBackground(weatherCondition) {
+        const body = document.body;
+        const sunnySound = document.getElementById("sunny-sound");
+        const rainySound = document.getElementById("rainy-sound");
+        const snowySound = document.getElementById("snowy-sound");
+        const cloudySound = document.getElementById("cloudy-sound");
+
+        switch (weatherCondition) {
+            case "Clear":
+                body.style.backgroundImage = "url('static/images/sunny.gif')";
+                sunnySound.play(); // Play sunny sound
+                break;
+            case "Clouds":
+                body.style.backgroundImage = "url('static/images/cloudy.gif')";
+                cloudySound.play(); // Play cloudy sound
+                break;
+            case "Rain":
+                body.style.backgroundImage = "url('static/images/rainy.gif')";
+                rainySound.play(); // Play rainy sound
+                break;
+            case "Snow":
+                body.style.backgroundImage = "url('static/images/snowy.gif')";
+                snowySound.play(); // Play snowy sound
+                break;
+            default:
+                body.style.backgroundImage = "url('')";
+        }
+    }
+
+        searchButton.addEventListener("click", () => {
+            const city = cityInput.value.trim();
+            if (city) {
+                fetchWeatherData(city);
+            } else {
+                alert("Please enter a city name.");
+            }
+        });
+        let temperatureChart;
+
+function updateHourlyForecast(data) {
+    const hourlyContainer = document.getElementById("hourly-forecast");
+    hourlyContainer.innerHTML = ""; 
+    
+    const labels = [];
+    const temperatures = [];
+    
+    data.list.slice(0, 5).forEach((hour) => {
+        const date = new Date(hour.dt * 1000);
+        labels.push(`${date.getHours()}:00`);
+        temperatures.push(hour.main.temp);
+        
+        const hourCard = document.createElement("div");
+        hourCard.className = "hour-card";
+        hourCard.innerHTML = `
+            <p>${date.getHours()}:00</p>
+            <h2>${hour.main.temp} °C</h2>
+            <img src="https://openweathermap.org/img/wn/${hour.weather[0].icon}.png" alt="weather icon">
+        `;
+        hourlyContainer.appendChild(hourCard);
+    });
+
+ 
+    if (temperatureChart) {
+        temperatureChart.destroy(); 
+    }
+
+    const ctx = document.getElementById('temperatureChart').getContext('2d');
+    temperatureChart = new Chart(ctx, {
+        type: 'line', 
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Temperature (°C)',
+                data: temperatures,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2,
+                tension: 0.4,
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Temperature (°C)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Hour'
+                    }
+                }
+            }
+        }
+    });
+}
+let weatherData = {
+    labels: ['Temperature', 'Humidity', 'Pressure', 'Wind Speed', 'Visibility'],
+    data: []
+};
+
+
+
+function createChart() {
+    const ctx = document.getElementById('weatherChart').getContext('2d');
+    const weatherChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: weatherData.labels,
+            datasets: [{
+                label: 'Weather Parameters',
+                data: weatherData.data,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+function updateCurrentWeather(data) {
+    document.getElementById("current-temp").textContent = `${data.main.temp} °C`;
+    document.getElementById("current-condition").textContent = data.weather[0].description;
+    document.getElementById("current-location").textContent = `${data.name}, ${data.sys.country}`;
+    document.getElementById("humidity").textContent = `${data.main.humidity}%`;
+    document.getElementById("pressure").textContent = `${data.main.pressure} hPa`;
+    document.getElementById("visibility").textContent = `${(data.visibility / 1000).toFixed(1)} km`;
+    document.getElementById("wind-speed").textContent = `${data.wind.speed} m/s`;
+    document.getElementById("feels-like").textContent = `${data.main.feels_like} °C`;
+    
+    // Store the values in the data array
+    weatherData.data = [
+        data.main.temp,
+        data.main.humidity,
+        data.main.pressure,
+        data.wind.speed,
+        (data.visibility / 1000).toFixed(1)
+    ];
+    
+    // Update chart after fetching weather data
+    createChart();
+
+    const sunriseDate = new Date(data.sys.sunrise * 1000);
+    const sunsetDate = new Date(data.sys.sunset * 1000);
+    document.getElementById("sunrise-time").textContent = sunriseDate.toLocaleTimeString();
+    document.getElementById("sunset-time").textContent = sunsetDate.toLocaleTimeString();
+    const currentDate = moment().format("MMMM Do YYYY, h:mm:ss a");
+    document.getElementById("current-date").textContent = currentDate;
+    document.getElementById("weather-icon").src = `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+}
+
+
+        locationButton.addEventListener("click", () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    fetchWeatherData(`${lat},${lon}`);
+                }, () => {
+                    alert("Could not retrieve your location.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        });
+    
+    </script>
+</body>
+
+</html>
+
+
