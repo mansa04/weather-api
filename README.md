@@ -9,6 +9,7 @@ An interactive and visually appealing **weather forecasting web app** built with
 - 📈 Hourly and 5-day weather forecasts with animated charts
 - 🎵 Background audio based on weather (sunny, rainy, cloudy, etc.)
 - 🗺️ Interactive weather map via OpenWeather API
+- 📰 **Latest Weather News** fetched dynamically
 - 🎨 Dynamic UI with animated transitions & weather-based backgrounds
 - 📱 Fully responsive for desktop, tablet, and mobile
 
